@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=3 uid="uid://cbv1dxyigx1xv"]
+
+[ext_resource type="PackedScene" uid="uid://cxkheb3utiifc" path="res://env_static_body.tscn" id="1_nejv4"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_jgbpm"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="PlayerCharacterBody" type="PlayerCharacterBody" parent="."]
+horizontal_move_speed = 1500.0
+gravity = 1500.0
+max_walk_speed = 250.0
+jump_y_vel = 500.0
+reverse_boost = 10.0
+air_friction = Vector2(2, 0.1)
+leading_jump_buffer = 0.125
+trailing_jump_buffer = 0.1
+move_left_action = "move_left"
+move_right_action = "move_right"
+jump_input = "jump"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCharacterBody"]
+shape = SubResource("CapsuleShape2D_jgbpm")
+
+[node name="ColorRect" type="ColorRect" parent="PlayerCharacterBody"]
+offset_left = -10.0
+offset_top = -15.0
+offset_right = 10.0
+offset_bottom = 15.0
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(4, 4)
+
+[node name="StaticBody2D" parent="." instance=ExtResource("1_nejv4")]
+position = Vector2(-157, 280)
+scale = Vector2(24.5495, 22.1684)
+
+[node name="StaticBody2D4" parent="." instance=ExtResource("1_nejv4")]
+position = Vector2(156, 346)
+scale = Vector2(24.5495, 22.1684)
+
+[node name="StaticBody2D2" parent="." instance=ExtResource("1_nejv4")]
+position = Vector2(-311, -66)
+scale = Vector2(12.9577, 23.637)
+
+[node name="StaticBody2D3" parent="." instance=ExtResource("1_nejv4")]
+position = Vector2(355, 4)
+scale = Vector2(12.9577, 23.637)
