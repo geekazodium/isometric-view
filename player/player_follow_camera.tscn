@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://dv0o6hn0hxv2w"]
 
-[node name="Tweener3D" type="Tweener3D" node_paths=PackedStringArray("follow_target")]
+[node name="Tweener3D" type="Tweener3D"]
 tween_velocity = 10.0
-follow_target = NodePath("")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.707107, 0.5, -0.5, 0, 0.707107, 0.707107, 0.707107, 0.5, -0.5, -60, 80, -60)
+transform = Transform3D(-0.707107, 0.5, -0.5, 0, 0.707107, 0.707107, 0.707107, 0.5, -0.5, -60, 85, -60)
+projection = 1
 fov = 20.0
-size = 15.0
+size = 20.0

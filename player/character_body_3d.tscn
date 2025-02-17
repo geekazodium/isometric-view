@@ -10,7 +10,7 @@ acceleration = 100.0
 forward = Vector3(1, 0, 1)
 left = Vector3(1, 0, -1)
 gravity = -9.8
-ground_friction = 5.0
+ground_friction = 7.5
 forward_back_opposing_actions = NodePath("OpposingForwardBack")
 left_right_opposing_actions = NodePath("OpposingLeftRight")
 axis_lock_angular_x = true
@@ -30,3 +30,15 @@ negative_action = "move_right"
 [node name="OpposingForwardBack" type="OpposingKeyboardActions" parent="."]
 positive_action = "move_forward"
 negative_action = "move_backward"
+
+[node name="PlayerHealthTracker" type="TickingStatTracker" parent="."]
+max_meter = 100.0
+current_meter = 100.0
+increase_per_second = -1.0
+update_event_name = "player_health_changed"
+
+[node name="TickingStatTracker" type="TickingStatTracker" parent="."]
+max_meter = 100.0
+current_meter = 100.0
+increase_per_second = -2.0
+update_event_name = "player_sanity_changed"

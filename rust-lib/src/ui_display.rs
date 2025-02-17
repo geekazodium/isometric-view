@@ -1,28 +1,33 @@
+use godot::builtin::Callable;
 use godot::builtin::GString;
-use godot::classes::RichTextLabel;
+use godot::classes::IProgressBar;
+use godot::classes::ProgressBar;
 use godot::obj::Base;
-use godot::obj::Gd;
 use godot::obj::WithBaseField;
 use godot::prelude::godot_api;
 use godot::prelude::GodotClass;
 
-use crate::targets_counting::TargetsCounter;
+use crate::event_bus::EventBus;
 
 #[derive(GodotClass)]
-#[class(base = RichTextLabel, init)]
-struct BallsCountDisplay{
-    base: Base<RichTextLabel>,
+#[class(base = ProgressBar, init)]
+struct StatDisplay{
+    base: Base<ProgressBar>,
     #[export]
-    target_counter: Option<Gd<TargetsCounter>>,
-    #[export]
-    base_text: GString
+    stat_update_signal: GString
 }
 
 #[godot_api]
-impl BallsCountDisplay {
+impl IProgressBar for StatDisplay{
+    fn ready(&mut self){
+        EventBus::singleton().connect(self.stat_update_signal.arg(), &Callable::from_object_method(&self.to_gd(), "update"));
+    }
+}
+
+#[godot_api]
+impl StatDisplay {
     #[func]
-    fn update(&mut self){
-        let text = format!("{} {}",self.base_text, self.target_counter.as_ref().unwrap().bind().get_sphere_count());
-        self.base_mut().set_text(&text);
+    fn update(&mut self, new_value: f64){
+        self.base_mut().set_value(new_value);
     }
 }
