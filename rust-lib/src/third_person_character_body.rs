@@ -20,8 +20,9 @@ struct ThirdPersonCharacterBody{
     base: Base<CharacterBody3D>,
     #[export] max_speed: f32,
     #[export] acceleration: f32,
-    #[doc = "90 deg is a cross prod with up"]
+    
     #[export] forward: Vector3,
+    #[export] left: Vector3,
     #[export] accel: Vector3,
 
     #[export] gravity: f32,
@@ -37,9 +38,9 @@ impl ICharacterBody3D for ThirdPersonCharacterBody {
     fn physics_process(&mut self, delta: f64){
         let up = self.base().get_up_direction();
 
-        let forward = self.get_norm_forward();
+        let forward = self.get_forward();
 
-        let left = forward.rotated(up, f32::consts::PI / 2.);
+        let left = self.get_left();
 
         let move_dir = self.get_direction_vec();
         let direction = forward * move_dir.y + left * move_dir.x;
@@ -71,9 +72,6 @@ impl ICharacterBody3D for ThirdPersonCharacterBody {
 }
 
 impl ThirdPersonCharacterBody{
-    fn get_norm_forward(&self) -> Vector3{
-        self.forward.normalized_or_zero()
-    }
     fn get_direction_vec(&self) -> Vector2{
         Vector2::new(
             self.left_right_opposing_actions.as_ref().expect("left right actions not set").bind().get_direction(), 

@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://cfo0gbssufe3m"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7jcwh"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_c12hv"]
+
+[node name="CharacterBody3D" type="ThirdPersonCharacterBody" node_paths=PackedStringArray("forward_back_opposing_actions", "left_right_opposing_actions")]
+max_speed = 1000.0
+acceleration = 100.0
+forward = Vector3(1, 0, 1)
+left = Vector3(1, 0, -1)
+gravity = -9.8
+ground_friction = 5.0
+forward_back_opposing_actions = NodePath("OpposingForwardBack")
+left_right_opposing_actions = NodePath("OpposingLeftRight")
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_7jcwh")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_c12hv")
+
+[node name="OpposingLeftRight" type="OpposingKeyboardActions" parent="."]
+positive_action = "move_left"
+negative_action = "move_right"
+
+[node name="OpposingForwardBack" type="OpposingKeyboardActions" parent="."]
+positive_action = "move_forward"
+negative_action = "move_backward"
