@@ -1,0 +1,77 @@
+[gd_scene load_steps=8 format=3 uid="uid://cbv1dxyigx1xv"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qer7y"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_q4hax"]
+sky_material = SubResource("ProceduralSkyMaterial_qer7y")
+
+[sub_resource type="Environment" id="Environment_1y8ev"]
+background_mode = 2
+sky = SubResource("Sky_q4hax")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7jcwh"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_c12hv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l4rk5"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ffeqe"]
+
+[node name="Node2D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1y8ev")
+
+[node name="Sunlight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 3.68534, 0)
+shadow_enabled = true
+
+[node name="CharacterBody3D" type="ThirdPersonCharacterBody" parent="." node_paths=PackedStringArray("forward_back_opposing_actions", "left_right_opposing_actions")]
+max_speed = 1000.0
+acceleration = 100.0
+forward = Vector3(1, 0, 1)
+gravity = -9.8
+ground_friction = 5.0
+forward_back_opposing_actions = NodePath("OpposingForwardBack")
+left_right_opposing_actions = NodePath("OpposingLeftRight")
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_7jcwh")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
+mesh = SubResource("CapsuleMesh_c12hv")
+
+[node name="OpposingLeftRight" type="OpposingKeyboardActions" parent="CharacterBody3D"]
+positive_action = "move_left"
+negative_action = "move_right"
+
+[node name="OpposingForwardBack" type="OpposingKeyboardActions" parent="CharacterBody3D"]
+positive_action = "move_forward"
+negative_action = "move_backward"
+
+[node name="Tweener3D" type="Tweener3D" parent="." node_paths=PackedStringArray("follow_target")]
+tween_velocity = 10.0
+follow_target = NodePath("../CharacterBody3D")
+
+[node name="Camera3D" type="Camera3D" parent="Tweener3D"]
+transform = Transform3D(-0.707107, 0.5, -0.5, 0, 0.707107, 0.707107, 0.707107, 0.5, -0.5, -60, 80, -60)
+fov = 20.0
+size = 15.0
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.56366, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_l4rk5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+transform = Transform3D(100, 0, 0, 0, 1, 0, 0, 0, 100, 0, 0, 0)
+mesh = SubResource("BoxMesh_ffeqe")
