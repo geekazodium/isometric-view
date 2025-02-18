@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cbv1dxyigx1xv"]
+[gd_scene load_steps=12 format=3 uid="uid://cbv1dxyigx1xv"]
 
 [ext_resource type="PackedScene" uid="uid://cfo0gbssufe3m" path="res://player/character_body_3d.tscn" id="1_7f8rh"]
 [ext_resource type="PackedScene" uid="uid://f6q8kbwx588i" path="res://ui/gameplay_ui.tscn" id="1_codw0"]
@@ -17,12 +17,27 @@ sky_material = SubResource("ProceduralSkyMaterial_qer7y")
 background_mode = 2
 sky = SubResource("Sky_q4hax")
 tonemap_mode = 2
-ssao_intensity = 16.0
-ssao_light_affect = 0.65
+ssao_enabled = true
+ssao_light_affect = 1.0
 ssao_ao_channel_affect = 1.0
+ssil_enabled = true
+ssil_radius = 10.0
 glow_enabled = true
 
-[node name="Node2D" type="Node3D"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_giv3c"]
+size = Vector3(1024, 1, 1024)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sk865"]
+albedo_color = Color(0.342038, 0.158549, 0.122769, 1)
+emission_enabled = true
+emission = Color(0.935026, 0.569317, 0.329688, 1)
+emission_energy_multiplier = 1.4
+
+[sub_resource type="BoxMesh" id="BoxMesh_unxch"]
+material = SubResource("StandardMaterial3D_sk865")
+size = Vector3(1024, 1, 1024)
+
+[node name="Root" type="Node3D"]
 
 [node name="GameplayUi" parent="." instance=ExtResource("1_codw0")]
 
@@ -33,27 +48,55 @@ environment = SubResource("Environment_1y8ev")
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 3.68534, 0)
 shadow_enabled = true
 
-[node name="CharacterBody3D" parent="." instance=ExtResource("1_7f8rh")]
+[node name="Tweener3D" parent="." node_paths=PackedStringArray("follow_target") instance=ExtResource("2_ov3qn")]
+follow_target = NodePath("../TargetsCounter/CharacterBody3D")
+
+[node name="WorldNodes" type="Node3D" parent="."]
+
+[node name="Cylinder" parent="WorldNodes" instance=ExtResource("4_gc6kr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.11445, -0.224729, 0.292706)
+
+[node name="FloorBody" parent="WorldNodes" instance=ExtResource("4_d3cda")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -9.04441, 0)
+
+[node name="FloorBody2" parent="WorldNodes" instance=ExtResource("4_d3cda")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.203, -9.04441, -6.109)
+
+[node name="FloorBody3" parent="WorldNodes" instance=ExtResource("4_d3cda")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.47, -9.04441, 15.261)
+
+[node name="FloorBody4" parent="WorldNodes" instance=ExtResource("4_d3cda")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.791, -9.04441, -17.034)
+
+[node name="FloorBody5" parent="WorldNodes" instance=ExtResource("4_d3cda")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.966, -9.04441, -21.924)
+
+[node name="Area3D" type="Area3D" parent="WorldNodes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -17.8324, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldNodes/Area3D"]
+shape = SubResource("BoxShape3D_giv3c")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WorldNodes/Area3D"]
+mesh = SubResource("BoxMesh_unxch")
+
+[node name="LoadScene" type="LoadScene" parent="WorldNodes/Area3D"]
+next = "res://game_scene.tscn"
+
+[node name="RandomSpawner" type="RandomSpawner" parent="." node_paths=PackedStringArray("other_point", "target")]
+min_spawns = 3
+max_spawns = 4
+other_point = NodePath("Node3D")
+spawn_scene = ExtResource("1_7f8rh")
+target = NodePath("../TargetsCounter")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -6)
+
+[node name="Node3D" type="Node3D" parent="RandomSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 12)
+
+[node name="TargetsCounter" type="TargetsCounter" parent="."]
+
+[node name="CharacterBody3D" parent="TargetsCounter" instance=ExtResource("1_7f8rh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.272177, 0)
 
-[node name="Tweener3D" parent="." node_paths=PackedStringArray("follow_target") instance=ExtResource("2_ov3qn")]
-follow_target = NodePath("../CharacterBody3D")
-
-[node name="Node3D" type="Node3D" parent="."]
-
-[node name="Cylinder" parent="Node3D" instance=ExtResource("4_gc6kr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.11445, 0, 0.292706)
-
-[node name="FloorBody" parent="Node3D" instance=ExtResource("4_d3cda")]
-
-[node name="FloorBody2" parent="Node3D" instance=ExtResource("4_d3cda")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.203, -1.4, -6.109)
-
-[node name="FloorBody3" parent="Node3D" instance=ExtResource("4_d3cda")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.47, -1.4, 15.261)
-
-[node name="FloorBody4" parent="Node3D" instance=ExtResource("4_d3cda")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.791, -1.4, -17.034)
-
-[node name="FloorBody5" parent="Node3D" instance=ExtResource("4_d3cda")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.966, -1.4, -21.924)
+[connection signal="body_entered" from="WorldNodes/Area3D" to="WorldNodes/Area3D/LoadScene" method="load_next_scene"]

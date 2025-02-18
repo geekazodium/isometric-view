@@ -5,12 +5,11 @@
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_c12hv"]
 
 [node name="CharacterBody3D" type="ThirdPersonCharacterBody" node_paths=PackedStringArray("forward_back_opposing_actions", "left_right_opposing_actions")]
-max_speed = 1000.0
-acceleration = 100.0
+acceleration = 80.0
 forward = Vector3(1, 0, 1)
 left = Vector3(1, 0, -1)
-gravity = -9.8
-ground_friction = 7.5
+gravity = -15.0
+ground_friction = 9.0
 forward_back_opposing_actions = NodePath("OpposingForwardBack")
 left_right_opposing_actions = NodePath("OpposingLeftRight")
 axis_lock_angular_x = true

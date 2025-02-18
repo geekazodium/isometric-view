@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://cf3kdmjama6v1"]
+
+[node name="DeathBeam" type="RayCast3D"]
+target_position = Vector3(128, 0, 0)
+debug_shape_custom_color = Color(1, 0, 0, 1)

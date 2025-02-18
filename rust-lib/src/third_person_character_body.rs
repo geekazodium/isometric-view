@@ -18,7 +18,6 @@ use godot::prelude::GodotClass;
 #[class[base = CharacterBody3D, init]]
 struct ThirdPersonCharacterBody{
     base: Base<CharacterBody3D>,
-    #[export] max_speed: f32,
     #[export] acceleration: f32,
     
     #[export] forward: Vector3,
