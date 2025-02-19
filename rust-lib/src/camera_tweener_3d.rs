@@ -1,5 +1,6 @@
 use core::f64;
 
+use godot::builtin::Callable;
 use godot::classes::INode3D;
 use godot::classes::Node3D;
 use godot::obj::Base;
@@ -26,6 +27,11 @@ impl INode3D for Tweener3D{
             base
         }
     }
+    fn ready(&mut self){
+        if let Some(mut target) = self.get_follow_target(){
+            target.connect("tree_exiting", &Callable::from_object_method(&self.to_gd(), "on_target_removed"));
+        }
+    }
     fn process(&mut self,delta: f64){
         if self.follow_target.is_none(){
             return;
@@ -36,5 +42,13 @@ impl INode3D for Tweener3D{
         let move_by = (transform - this_transform)*scale_fac as f32;
         let new_transform = self.base().get_transform().translated_local(move_by);
         self.base_mut().set_transform(new_transform);
+    }
+}
+
+#[godot_api]
+impl Tweener3D{
+    #[func]
+    fn on_target_removed(&mut self){
+        self.follow_target = None;
     }
 }

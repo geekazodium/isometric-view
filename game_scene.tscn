@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cbv1dxyigx1xv"]
+[gd_scene load_steps=13 format=3 uid="uid://cbv1dxyigx1xv"]
 
 [ext_resource type="PackedScene" uid="uid://cfo0gbssufe3m" path="res://player/character_body_3d.tscn" id="1_7f8rh"]
 [ext_resource type="PackedScene" uid="uid://f6q8kbwx588i" path="res://ui/gameplay_ui.tscn" id="1_codw0"]
@@ -23,6 +23,11 @@ ssao_ao_channel_affect = 1.0
 ssil_enabled = true
 ssil_radius = 10.0
 glow_enabled = true
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_jytar"]
+vertices = PackedVector3Array(23.25, -0.544411, -9.424, 24.5, -0.544411, -9.424, 24.25, -0.544411, -24.674, 20.5, -0.544411, -24.924, 5.25, -0.544411, -29.424, 5.25, -0.544411, -14.424, 7.5, -0.544411, -14.174, 20.5, -0.544411, -29.424, 7.5, -0.544411, -9.674, 35.25, -0.544411, -9.424, 35.25, -0.544411, -24.674, 7.5, -0.544411, -7.924, 7, -0.544411, -7.674, 7.75, -0.544411, 1.326, 8, -0.544411, 1.576, 22.75, -0.544411, 1.576, 22.75, -0.544411, -9.174, -7.5, -0.544411, 0.0760002, -5.75, -0.544411, 0.0760002, -5.25, -0.544411, -1.174, -7.5, -0.544411, -7.674, -2.5, -0.544411, -0.674, -2.5, -0.544411, 0.826, -3.5, -0.544411, -1.424, -3.5, 1.20559, 0.576, -3.5, 1.20559, -0.174, -4, 1.20559, -0.424, -4.75, 1.20559, 0.0760002, -4.5, 1.20559, 0.826, 7.5, -0.544411, 1.826, -5.75, -0.544411, 1.076, -5, -0.544411, 1.826, -7.5, -0.544411, 7.576, 1.5, -0.544411, 7.576, 1.75, -0.544411, 8.076, 7.5, -0.544411, 7.326, -3, -0.544411, 1.826, 17, -0.544411, 7.576, 1.75, -0.544411, 22.826, 17, -0.544411, 22.826)
+polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Array(6, 5, 4), PackedInt32Array(4, 3, 6), PackedInt32Array(6, 3, 0), PackedInt32Array(4, 7, 3), PackedInt32Array(0, 8, 6), PackedInt32Array(9, 1, 10), PackedInt32Array(10, 1, 2), PackedInt32Array(13, 12, 11), PackedInt32Array(13, 11, 14), PackedInt32Array(14, 11, 8), PackedInt32Array(14, 8, 16), PackedInt32Array(14, 16, 15), PackedInt32Array(8, 0, 16), PackedInt32Array(18, 17, 19), PackedInt32Array(19, 17, 20), PackedInt32Array(13, 22, 21), PackedInt32Array(23, 19, 20), PackedInt32Array(23, 20, 21), PackedInt32Array(21, 20, 12), PackedInt32Array(21, 12, 13), PackedInt32Array(25, 24, 26), PackedInt32Array(26, 24, 27), PackedInt32Array(27, 24, 28), PackedInt32Array(13, 14, 29), PackedInt32Array(17, 18, 30), PackedInt32Array(30, 31, 17), PackedInt32Array(17, 31, 32), PackedInt32Array(34, 33, 35), PackedInt32Array(35, 33, 29), PackedInt32Array(36, 22, 33), PackedInt32Array(33, 22, 29), PackedInt32Array(29, 22, 13), PackedInt32Array(31, 36, 32), PackedInt32Array(32, 36, 33), PackedInt32Array(35, 37, 34), PackedInt32Array(34, 37, 38), PackedInt32Array(38, 37, 39)]
+geometry_parsed_geometry_type = 1
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_giv3c"]
 size = Vector3(1024, 1, 1024)
@@ -49,38 +54,39 @@ transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75
 shadow_enabled = true
 
 [node name="Tweener3D" parent="." node_paths=PackedStringArray("follow_target") instance=ExtResource("2_ov3qn")]
-follow_target = NodePath("../TargetsCounter/CharacterBody3D")
+follow_target = NodePath("../CharacterBody3D")
 
-[node name="WorldNodes" type="Node3D" parent="."]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_jytar")
 
-[node name="Cylinder" parent="WorldNodes" instance=ExtResource("4_gc6kr")]
+[node name="Cylinder" parent="NavigationRegion3D" instance=ExtResource("4_gc6kr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.11445, -0.224729, 0.292706)
 
-[node name="FloorBody" parent="WorldNodes" instance=ExtResource("4_d3cda")]
+[node name="FloorBody" parent="NavigationRegion3D" instance=ExtResource("4_d3cda")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -9.04441, 0)
 
-[node name="FloorBody2" parent="WorldNodes" instance=ExtResource("4_d3cda")]
+[node name="FloorBody2" parent="NavigationRegion3D" instance=ExtResource("4_d3cda")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.203, -9.04441, -6.109)
 
-[node name="FloorBody3" parent="WorldNodes" instance=ExtResource("4_d3cda")]
+[node name="FloorBody3" parent="NavigationRegion3D" instance=ExtResource("4_d3cda")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.47, -9.04441, 15.261)
 
-[node name="FloorBody4" parent="WorldNodes" instance=ExtResource("4_d3cda")]
+[node name="FloorBody4" parent="NavigationRegion3D" instance=ExtResource("4_d3cda")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.791, -9.04441, -17.034)
 
-[node name="FloorBody5" parent="WorldNodes" instance=ExtResource("4_d3cda")]
+[node name="FloorBody5" parent="NavigationRegion3D" instance=ExtResource("4_d3cda")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.966, -9.04441, -21.924)
 
-[node name="Area3D" type="Area3D" parent="WorldNodes"]
+[node name="Area3D" type="Area3D" parent="NavigationRegion3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -17.8324, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldNodes/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Area3D"]
 shape = SubResource("BoxShape3D_giv3c")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="WorldNodes/Area3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/Area3D"]
 mesh = SubResource("BoxMesh_unxch")
 
-[node name="LoadScene" type="LoadScene" parent="WorldNodes/Area3D"]
+[node name="LoadScene" type="LoadScene" parent="NavigationRegion3D/Area3D"]
 next = "res://game_scene.tscn"
 
 [node name="RandomSpawner" type="RandomSpawner" parent="." node_paths=PackedStringArray("other_point", "target")]
@@ -89,14 +95,14 @@ max_spawns = 4
 other_point = NodePath("Node3D")
 spawn_scene = ExtResource("1_7f8rh")
 target = NodePath("../TargetsCounter")
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -5)
 
 [node name="Node3D" type="Node3D" parent="RandomSpawner"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 10)
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("1_7f8rh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.272177, 0)
 
 [node name="TargetsCounter" type="TargetsCounter" parent="."]
 
-[node name="CharacterBody3D" parent="TargetsCounter" instance=ExtResource("1_7f8rh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.272177, 0)
-
-[connection signal="body_entered" from="WorldNodes/Area3D" to="WorldNodes/Area3D/LoadScene" method="load_next_scene"]
+[connection signal="body_entered" from="NavigationRegion3D/Area3D" to="NavigationRegion3D/Area3D/LoadScene" method="load_next_scene"]

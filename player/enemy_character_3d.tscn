@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://cfo0gbssufe3m"]
+[gd_scene load_steps=3 format=3 uid="uid://cj02abgih6uel"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7jcwh"]
 
@@ -41,13 +41,3 @@ max_meter = 100.0
 current_meter = 100.0
 increase_per_second = -2.0
 update_event_name = "player_sanity_changed"
-
-[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
-
-[node name="AIBehaviorNode" type="AIBehaviorNode" parent="."]
-
-[node name="EnemyTargetingState" type="EnemyTargetingState" parent="AIBehaviorNode"]
-
-[node name="EnemyIdleState" type="EnemyIdleState" parent="AIBehaviorNode"]
-
-[node name="EnemyAttackState" type="EnemyAttackState" parent="AIBehaviorNode"]
