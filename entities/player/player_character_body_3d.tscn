@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://cj02abgih6uel"]
+[gd_scene load_steps=3 format=3 uid="uid://cfo0gbssufe3m"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7jcwh"]
 
@@ -12,6 +12,7 @@ gravity = -15.0
 ground_friction = 9.0
 forward_back_opposing_actions = NodePath("OpposingForwardBack")
 left_right_opposing_actions = NodePath("OpposingLeftRight")
+collision_layer = 3
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
@@ -36,7 +37,7 @@ current_meter = 100.0
 increase_per_second = -1.0
 update_event_name = "player_health_changed"
 
-[node name="TickingStatTracker" type="TickingStatTracker" parent="."]
+[node name="PlayerSanityTracker" type="TickingStatTracker" parent="."]
 max_meter = 100.0
 current_meter = 100.0
 increase_per_second = -2.0

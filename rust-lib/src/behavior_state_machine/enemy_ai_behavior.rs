@@ -16,7 +16,6 @@ use godot::obj::Gd;
 use godot::obj::WithBaseField;
 use godot::prelude::godot_api;
 use godot::prelude::GodotClass;
-use godot::prelude::Var;
 
 use crate::behavior_state_machine::ai_behavior::AIBehaviorNode;
 
@@ -71,8 +70,8 @@ impl EnemyIdleState {
         if !get_enabled!(self){return;}
         if let Some(target_tracker) = &mut self.target_tracker{
             target_tracker.bind_mut().set_target(node);
+            set_state!(self,self.detected_state);
         }
-        set_state!(self,self.detected_state);
     }
 }
 
@@ -89,7 +88,9 @@ pub struct EnemyTargetingState{
     #[export]
     target_tracker: Option<Gd<EnemyTargetTracker>>,
     #[export]
-    navigation_agent: Option<Gd<Node>>
+    navigation_agent: Option<Gd<Node>>,
+    #[export]
+    follow_speed: f32
 }
 
 #[godot_api]
@@ -97,8 +98,16 @@ impl INode for EnemyTargetingState{
     fn ready(&mut self){
         
     }
-    fn physics_process(&mut self, delta: f64){
-        self.move_towards(delta);
+    fn physics_process(&mut self, _delta: f64){
+        let target_pos = self.get_target().get_global_position();
+        self.set_nav_target_pos(target_pos);
+        let mut character_body = self.get_character_body_expect();
+        let dir = self.get_nav_agent_next_pos() - character_body.get_global_position();
+        character_body.set_velocity(dir.normalized() * self.follow_speed);
+        character_body.move_and_slide();
+        if (target_pos - character_body.get_global_position()).length() < self.distance_tolerance{
+            set_state!(self, self.in_distance_state);
+        }
     }
 }
 
@@ -111,12 +120,6 @@ impl EnemyTargetingState {
             .expect(panic_message!(self,"no target tracker")).bind()
             .get_target_node()
             .expect(panic_message!(self,"oh whops"))
-    }
-    fn move_towards(&mut self, delta: f64){
-        self.set_nav_target_pos(self.get_target().get_global_position());
-        let mut character_body = self.get_character_body_expect();
-        let dir = self.get_nav_agent_next_pos() - character_body.get_global_position();
-        character_body.set_velocity(dir.normalized());
     }
     fn set_nav_target_pos(&self, pos: Vector3){
         self.get_navigation_agent().expect("no nav agent set")
@@ -155,12 +158,13 @@ impl INode for EnemyAttackState {
         self.attack_used = false;
     }
     fn physics_process(&mut self, _delta: f64){
+        self.get_character_body().unwrap().move_and_slide();
         if self.attack_used { return; }
         if let Some(target) = self.get_target_tracker().map(|v| v.bind().get_target_node()).flatten(){
             let distance = self.get_character_body().unwrap().get_global_position() - target.get_position();
             let mut attack: Gd<Node3D> = self.get_attack_scene().unwrap().instantiate().expect("failed to instantiate").cast();
             self.base().get_parent().unwrap().add_child(&attack);
-            attack.set_quaternion(Quaternion::from_rotation_arc(Vector3::ZERO, distance));
+            attack.set_quaternion(Quaternion::from_rotation_arc(Vector3::new(1., 0., 0.), distance.normalized()));
             attack.connect(TREE_EXIT_SIGNAL, self.attack_finished_callable.as_ref().expect(INVALID_CALLABLE_ERR));
             self.attack_used = true;
         }else{
@@ -190,7 +194,7 @@ struct EnemyTargetTracker{
 #[godot_api]
 impl INode for EnemyTargetTracker {
     fn ready(&mut self){
-        
+        self.target_invalid_method = Some(Callable::from_object_method(&self.to_gd(), "on_target_invalid"));
     }
 }
 

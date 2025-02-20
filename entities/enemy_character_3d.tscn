@@ -1,0 +1,61 @@
+[gd_scene load_steps=5 format=3 uid="uid://cj02abgih6uel"]
+
+[ext_resource type="PackedScene" uid="uid://cf3kdmjama6v1" path="res://entities/attacks/death_beam.tscn" id="1_46q1q"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7jcwh"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_c12hv"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_gx1qe"]
+radius = 12.748
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_7jcwh")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_c12hv")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="AIBehaviorNode" type="AIBehaviorNode" parent="."]
+states_dict = {
+"Attack": NodePath("EnemyAttackState"),
+"Follow": NodePath("EnemyTargetingState"),
+"Idle": NodePath("EnemyIdleState")
+}
+current_state = "Idle"
+
+[node name="EnemyIdleState" type="EnemyIdleState" parent="AIBehaviorNode" node_paths=PackedStringArray("detection_hitbox", "target_tracker")]
+detection_hitbox = NodePath("../DetectionArea")
+detected_state = "Follow"
+target_tracker = NodePath("../EnemyTargetTracker")
+
+[node name="EnemyTargetingState" type="EnemyTargetingState" parent="AIBehaviorNode" node_paths=PackedStringArray("character_body", "target_tracker", "navigation_agent")]
+distance_tolerance = 10.0
+character_body = NodePath("../..")
+in_distance_state = "Attack"
+target_tracker = NodePath("../EnemyTargetTracker")
+navigation_agent = NodePath("../../NavigationAgent3D")
+follow_speed = 10.0
+
+[node name="EnemyAttackState" type="EnemyAttackState" parent="AIBehaviorNode" node_paths=PackedStringArray("target_tracker", "character_body")]
+attack_finished_state = "Follow"
+target_tracker = NodePath("../EnemyTargetTracker")
+attack_scene = ExtResource("1_46q1q")
+character_body = NodePath("../..")
+
+[node name="EnemyTargetTracker" type="EnemyTargetTracker" parent="AIBehaviorNode"]
+
+[node name="DetectionArea" type="Area3D" parent="AIBehaviorNode"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AIBehaviorNode/DetectionArea"]
+shape = SubResource("SphereShape3D_gx1qe")
+
+[connection signal="body_entered" from="AIBehaviorNode/DetectionArea" to="AIBehaviorNode/EnemyIdleState" method="on_body_entered_detection"]

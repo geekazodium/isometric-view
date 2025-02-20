@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://cbv1dxyigx1xv"]
+[gd_scene load_steps=14 format=3 uid="uid://cbv1dxyigx1xv"]
 
-[ext_resource type="PackedScene" uid="uid://cfo0gbssufe3m" path="res://player/character_body_3d.tscn" id="1_7f8rh"]
+[ext_resource type="PackedScene" uid="uid://cfo0gbssufe3m" path="res://entities/player/player_character_body_3d.tscn" id="1_7f8rh"]
 [ext_resource type="PackedScene" uid="uid://f6q8kbwx588i" path="res://ui/gameplay_ui.tscn" id="1_codw0"]
-[ext_resource type="PackedScene" uid="uid://dv0o6hn0hxv2w" path="res://player/player_follow_camera.tscn" id="2_ov3qn"]
+[ext_resource type="PackedScene" uid="uid://dv0o6hn0hxv2w" path="res://entities/player/player_follow_camera.tscn" id="2_ov3qn"]
 [ext_resource type="PackedScene" uid="uid://ch2cv7d7kfahf" path="res://world/floor_body.tscn" id="4_d3cda"]
 [ext_resource type="PackedScene" uid="uid://byydf1cbin8io" path="res://world/cylinder.tscn" id="4_gc6kr"]
+[ext_resource type="PackedScene" uid="uid://cj02abgih6uel" path="res://entities/enemy_character_3d.tscn" id="5_u7d3i"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qer7y"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -89,20 +90,22 @@ mesh = SubResource("BoxMesh_unxch")
 [node name="LoadScene" type="LoadScene" parent="NavigationRegion3D/Area3D"]
 next = "res://game_scene.tscn"
 
-[node name="RandomSpawner" type="RandomSpawner" parent="." node_paths=PackedStringArray("other_point", "target")]
-min_spawns = 3
-max_spawns = 4
-other_point = NodePath("Node3D")
-spawn_scene = ExtResource("1_7f8rh")
-target = NodePath("../TargetsCounter")
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -5)
-
-[node name="Node3D" type="Node3D" parent="RandomSpawner"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 10)
-
 [node name="CharacterBody3D" parent="." instance=ExtResource("1_7f8rh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.272177, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.3198, 0.272177, -18.1249)
+
+[node name="CharacterBody3D2" parent="." instance=ExtResource("5_u7d3i")]
 
 [node name="TargetsCounter" type="TargetsCounter" parent="."]
+
+[node name="RandomSpawner" type="RandomSpawner" parent="." node_paths=PackedStringArray("other_point", "target")]
+min_spawns = 1
+max_spawns = 3
+other_point = NodePath("OtherPoint")
+spawn_scene = ExtResource("5_u7d3i")
+target = NodePath("../TargetsCounter")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.65344, 0, 11.4054)
+
+[node name="OtherPoint" type="Node3D" parent="RandomSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 9)
 
 [connection signal="body_entered" from="NavigationRegion3D/Area3D" to="NavigationRegion3D/Area3D/LoadScene" method="load_next_scene"]

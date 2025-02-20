@@ -1,9 +1,8 @@
 use godot::builtin::Dictionary;
 use godot::builtin::GString;
-use godot::classes::INode2D;
+use godot::classes::INode3D;
 use godot::classes::Node;
-use godot::classes::Node2D;
-use godot::global::godot_print;
+use godot::classes::Node3D;
 use godot::obj::Base;
 use godot::obj::Gd;
 use godot::obj::WithBaseField;
@@ -11,9 +10,9 @@ use godot::prelude::godot_api;
 use godot::prelude::GodotClass;
 
 #[derive(GodotClass)]
-#[class(base = Node2D, init)]
+#[class(base = Node3D, init)]
 pub struct AIBehaviorNode{
-    base: Base<Node2D>,
+    base: Base<Node3D>,
     #[export]
     states_dict: Dictionary,
     #[export]
@@ -21,7 +20,7 @@ pub struct AIBehaviorNode{
 }
 
 #[godot_api]
-impl INode2D for AIBehaviorNode{
+impl INode3D for AIBehaviorNode{
     fn ready(&mut self){
         self.init_state_machine();
         self.notify_processing(true);
@@ -49,7 +48,6 @@ impl AIBehaviorNode{
             .for_each(|mut c|{
                 c.set_process(false);
                 c.set_physics_process(false);
-                c.set_block_signals(true);
             });
     }
     fn get_selected_state(&self) -> Gd<Node>{
@@ -58,9 +56,8 @@ impl AIBehaviorNode{
         self.base().find_child(&c.to_string()).expect("hacky solution did not work!")
     }
     fn notify_processing(&mut self, processing: bool){
-        godot_print!("notified state change for {} to state: {}",self.get_selected_state().to_string(), if processing {"enabled"} else {"disabled"});
+        //godot_print!("notified state change for {} to state: {}",self.get_selected_state().to_string(), if processing {"enabled"} else {"disabled"});
         let mut selected_state = self.get_selected_state();
-        selected_state.set_block_signals(!processing);
         selected_state.set_process(processing);
         selected_state.set_physics_process(processing);
     }
