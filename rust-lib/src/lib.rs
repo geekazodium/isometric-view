@@ -57,3 +57,4 @@ pub mod camera_tweener_3d;
 pub mod third_person_character_body;
 pub mod game_meters;
 pub mod behavior_state_machine;
+pub mod attack_raycast;

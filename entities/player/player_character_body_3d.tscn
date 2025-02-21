@@ -4,7 +4,7 @@
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_c12hv"]
 
-[node name="CharacterBody3D" type="ThirdPersonCharacterBody" node_paths=PackedStringArray("forward_back_opposing_actions", "left_right_opposing_actions")]
+[node name="PlayerCharacterBody" type="ThirdPersonCharacterBody" node_paths=PackedStringArray("forward_back_opposing_actions", "left_right_opposing_actions")]
 acceleration = 80.0
 forward = Vector3(1, 0, 1)
 left = Vector3(1, 0, -1)
@@ -31,13 +31,13 @@ negative_action = "move_right"
 positive_action = "move_forward"
 negative_action = "move_backward"
 
-[node name="PlayerHealthTracker" type="TickingStatTracker" parent="."]
+[node name="HealthTracker" type="TickingStatTracker" parent="."]
 max_meter = 100.0
 current_meter = 100.0
-increase_per_second = -1.0
+increase_per_second = 0.1
 update_event_name = "player_health_changed"
 
-[node name="PlayerSanityTracker" type="TickingStatTracker" parent="."]
+[node name="SanityTracker" type="TickingStatTracker" parent="."]
 max_meter = 100.0
 current_meter = 100.0
 increase_per_second = -2.0
