@@ -8,6 +8,7 @@ use godot::classes::ICharacterBody3D;
 use godot::classes::INode;
 use godot::classes::Input;
 use godot::classes::Node;
+use godot::meta::ToGodot;
 use godot::obj::Base;
 use godot::obj::Gd;
 use godot::obj::WithBaseField;
@@ -22,21 +23,16 @@ struct ThirdPersonCharacterBody{
     
     #[export] forward: Vector3,
     #[export] left: Vector3,
-    #[export] accel: Vector3,
-
-    #[export] gravity: f32,
-    #[export] ground_friction: f32,
 
     #[export] forward_back_opposing_actions: Option<Gd<OpposingKeyboardActions>>,
     #[export] left_right_opposing_actions: Option<Gd<OpposingKeyboardActions>>,
+    #[export] grounded_movement: Option<Gd<GroundedMovement>>
 }
 
 
 #[godot_api]
 impl ICharacterBody3D for ThirdPersonCharacterBody {
     fn physics_process(&mut self, delta: f64){
-        let up = self.base().get_up_direction();
-
         let forward = self.get_forward();
 
         let left = self.get_left();
@@ -44,29 +40,7 @@ impl ICharacterBody3D for ThirdPersonCharacterBody {
         let move_dir = self.get_direction_vec();
         let direction = forward * move_dir.y + left * move_dir.x;
 
-        let delta_time_f32 = delta as f32;
-        let velocity = self.base().get_velocity();
-        
-        let mut delta_v = Vector3::ZERO;
-
-        delta_v += up * self.gravity;
-        if self.base().is_on_floor(){
-            delta_v += -velocity * self.ground_friction;
-            delta_v += direction * self.acceleration;
-        }
-
-        // let mut delta_v_instant = Vector2::new(0., 0.);
-
-        // if self.jump_timer > 0. && self.ground_timer > 0.{
-        //     self.jump_timer = 0.;
-        //     self.ground_timer = 0.;
-        //     delta_v_instant += up * self.jump_y_vel;
-        //     delta_v_instant += -velocity.project(up);
-        // }
-
-        //apply delta velocity
-        self.base_mut().set_velocity(velocity + delta_v * delta_time_f32);
-        self.base_mut().move_and_slide();
+        self.get_grounded_movement().unwrap().bind().move_grounded(self.base().to_godot(), direction * self.acceleration, delta as f32);
     }
 }
 
@@ -79,7 +53,6 @@ impl ThirdPersonCharacterBody{
         .normalized_or_zero()
     }
 }
-
 
 #[derive(GodotClass)]
 #[class(base = Node,init)]
@@ -112,5 +85,27 @@ impl INode for OpposingKeyboardActions{
 impl OpposingKeyboardActions {
     pub fn get_direction(&self) -> f32{
         self.direction as f32
+    }
+}
+
+#[derive(GodotClass)]
+#[class(base = Node, init)]
+pub struct GroundedMovement{
+    base: Base<Node>,
+    #[export] gravity: f32,
+    #[export] ground_friction: f32
+}
+
+impl GroundedMovement{
+    pub fn move_grounded(&self, mut character_body: Gd<CharacterBody3D>, move_dir: Vector3, delta: f32){
+        let velocity = character_body.get_velocity();
+        let mut delta_v = Vector3::ZERO;
+        delta_v += character_body.get_up_direction() * self.gravity;
+        if character_body.is_on_floor(){
+            delta_v += -velocity * self.ground_friction;
+            delta_v += move_dir;
+        }
+        character_body.set_velocity(velocity + delta_v * delta);
+        character_body.move_and_slide();
     }
 }

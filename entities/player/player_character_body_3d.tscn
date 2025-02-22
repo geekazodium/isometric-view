@@ -1,17 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://cfo0gbssufe3m"]
+[gd_scene load_steps=5 format=3 uid="uid://cfo0gbssufe3m"]
+
+[ext_resource type="PackedScene" uid="uid://t6si6fogbiae" path="res://entities/attacks/player_death_beam.tscn" id="1_rfweq"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7jcwh"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_c12hv"]
 
-[node name="PlayerCharacterBody" type="ThirdPersonCharacterBody" node_paths=PackedStringArray("forward_back_opposing_actions", "left_right_opposing_actions")]
+[sub_resource type="SphereMesh" id="SphereMesh_6dtt5"]
+radius = 0.3
+height = 0.6
+
+[node name="PlayerCharacterBody" type="ThirdPersonCharacterBody" node_paths=PackedStringArray("forward_back_opposing_actions", "left_right_opposing_actions", "grounded_movement")]
 acceleration = 80.0
 forward = Vector3(1, 0, 1)
 left = Vector3(1, 0, -1)
-gravity = -15.0
-ground_friction = 9.0
 forward_back_opposing_actions = NodePath("OpposingForwardBack")
 left_right_opposing_actions = NodePath("OpposingLeftRight")
+grounded_movement = NodePath("GroundedMovement")
 collision_layer = 3
 axis_lock_angular_x = true
 axis_lock_angular_y = true
@@ -42,3 +47,21 @@ max_meter = 100.0
 current_meter = 100.0
 increase_per_second = -2.0
 update_event_name = "player_sanity_changed"
+
+[node name="UserAttackInstancer" type="UserAttackInstancer" parent="." node_paths=PackedStringArray("aim_pointer")]
+attack_action = "use_attack"
+cooldown = 1.0
+attack_use_buffer = 1.0
+attack = ExtResource("1_rfweq")
+attack_rotate_from = Vector3(1, 0, 0)
+aim_pointer = NodePath("../PlanarProjectAim")
+
+[node name="PlanarProjectAim" type="PlanarProjectAim" parent="."]
+plane_norm = Vector3(0, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlanarProjectAim"]
+mesh = SubResource("SphereMesh_6dtt5")
+
+[node name="GroundedMovement" type="GroundedMovement" parent="."]
+gravity = -15.0
+ground_friction = 9.0

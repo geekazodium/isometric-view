@@ -61,7 +61,7 @@ impl UserAttackInstancer{
         attack.set_quaternion(Quaternion::from_rotation_arc(self.attack_rotate_from, if aim_dir.is_zero_approx(){
             Vector3::DOWN
         }else{
-            aim_dir
+            aim_dir.normalized()
         }));
     }
 }

@@ -44,18 +44,21 @@ states_dict = {
 }
 current_state = "Idle"
 
-[node name="EnemyIdleState" type="EnemyIdleState" parent="AIBehaviorNode" node_paths=PackedStringArray("detection_hitbox", "target_tracker")]
+[node name="EnemyIdleState" type="EnemyIdleState" parent="AIBehaviorNode" node_paths=PackedStringArray("detection_hitbox", "target_tracker", "character_body", "grounded_movement")]
 detection_hitbox = NodePath("../DetectionArea")
 detected_state = "Follow"
 target_tracker = NodePath("../EnemyTargetTracker")
+character_body = NodePath("../..")
+grounded_movement = NodePath("../GroundedMovement")
 
-[node name="EnemyTargetingState" type="EnemyTargetingState" parent="AIBehaviorNode" node_paths=PackedStringArray("character_body", "target_tracker", "navigation_agent")]
+[node name="EnemyTargetingState" type="EnemyTargetingState" parent="AIBehaviorNode" node_paths=PackedStringArray("character_body", "target_tracker", "navigation_agent", "grounded_movement")]
 distance_tolerance = 10.0
 character_body = NodePath("../..")
 in_distance_state = "Attack"
 target_tracker = NodePath("../EnemyTargetTracker")
 navigation_agent = NodePath("../../NavigationAgent3D")
 follow_speed = 10.0
+grounded_movement = NodePath("../GroundedMovement")
 
 [node name="EnemyAttackState" type="EnemyAttackState" parent="AIBehaviorNode" node_paths=PackedStringArray("target_tracker", "character_body")]
 attack_finished_state = "Follow"
@@ -71,6 +74,10 @@ collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AIBehaviorNode/DetectionArea"]
 shape = SubResource("SphereShape3D_gx1qe")
+
+[node name="GroundedMovement" type="GroundedMovement" parent="AIBehaviorNode"]
+gravity = -15.0
+ground_friction = 9.0
 
 [node name="HealthTracker" type="TickingStatTracker" parent="."]
 max_meter = 100.0

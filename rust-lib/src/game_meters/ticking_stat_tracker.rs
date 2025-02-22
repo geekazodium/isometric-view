@@ -42,6 +42,7 @@ impl TickingStatTracker{
     pub fn add_to_stat(&mut self, amount: f64){
         self.current_meter += amount;
         self.clamp_stat();
+        self.emit_update_signal();
     }
     fn clamp_stat(&mut self){
         self.current_meter = self.current_meter.clamp(0., self.max_meter);

@@ -18,6 +18,7 @@ use godot::prelude::godot_api;
 use godot::prelude::GodotClass;
 
 use crate::behavior_state_machine::ai_behavior::AIBehaviorNode;
+use crate::third_person_character_body::GroundedMovement;
 
 macro_rules! get_parent {
     ($($s: expr)?) => {
@@ -44,22 +45,22 @@ macro_rules! panic_message {
 #[class(base = Node, init)]
 pub struct EnemyIdleState{
     base: Base<Node>,
-    #[export]
-    detection_hitbox: Option<Gd<Area3D>>,
-    #[export]
-    detected_state: GString,
-    #[export]
-    target_tracker: Option<Gd<EnemyTargetTracker>>
+    #[export] detection_hitbox: Option<Gd<Area3D>>,
+    #[export] detected_state: GString,
+    #[export] target_tracker: Option<Gd<EnemyTargetTracker>>,
+    #[export] character_body: Option<Gd<CharacterBody3D>>,
+    #[export] grounded_movement: Option<Gd<GroundedMovement>>
 }
 
 #[godot_api]
 impl INode for EnemyIdleState {
     fn ready(&mut self){
     }
-    fn physics_process(&mut self, _delta: f64){
+    fn physics_process(&mut self, delta: f64){
         if self.target_tracker.as_mut().map_or(false, |target_tracker|target_tracker.bind_mut().get_target_node().is_some()){
             set_state!(self,self.detected_state);
         }
+        self.grounded_movement.as_ref().unwrap().bind().move_grounded(self.get_character_body().unwrap(), Vector3::ZERO, delta as f32);
     }
 }
 
@@ -90,7 +91,8 @@ pub struct EnemyTargetingState{
     #[export]
     navigation_agent: Option<Gd<Node>>,
     #[export]
-    follow_speed: f32
+    follow_speed: f32,
+    #[export] grounded_movement: Option<Gd<GroundedMovement>>
 }
 
 #[godot_api]
@@ -98,13 +100,12 @@ impl INode for EnemyTargetingState{
     fn ready(&mut self){
         
     }
-    fn physics_process(&mut self, _delta: f64){
+    fn physics_process(&mut self, delta: f64){
         let target_pos = self.get_target().get_global_position();
         self.set_nav_target_pos(target_pos);
-        let mut character_body = self.get_character_body_expect();
+        let character_body = self.get_character_body_expect();
         let dir = self.get_nav_agent_next_pos() - character_body.get_global_position();
-        character_body.set_velocity(dir.normalized() * self.follow_speed);
-        character_body.move_and_slide();
+        self.grounded_movement.as_ref().unwrap().bind().move_grounded(self.get_character_body_expect(), dir.normalized() * self.follow_speed, delta as f32);
         if (target_pos - character_body.get_global_position()).length() < self.distance_tolerance{
             set_state!(self, self.in_distance_state);
         }
