@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cj02abgih6uel"]
+[gd_scene load_steps=8 format=3 uid="uid://cj02abgih6uel"]
 
 [ext_resource type="PackedScene" uid="uid://cf3kdmjama6v1" path="res://entities/attacks/death_beam.tscn" id="1_46q1q"]
 
@@ -9,7 +9,21 @@
 [sub_resource type="SphereShape3D" id="SphereShape3D_gx1qe"]
 radius = 12.748
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_ifp22"]
+viewport_path = NodePath("HealthTracker/PlayerHealthDisplaySubView")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_opeyi"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_ifp22")
+texture_repeat = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_3draa"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_opeyi")
+size = Vector2(3, 0.75)
+
 [node name="CharacterBody3D" type="CharacterBody3D"]
+collision_layer = 5
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
@@ -58,8 +72,30 @@ collision_mask = 2
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AIBehaviorNode/DetectionArea"]
 shape = SubResource("SphereShape3D_gx1qe")
 
-[node name="TickingStatTracker" type="TickingStatTracker" parent="."]
+[node name="HealthTracker" type="TickingStatTracker" parent="."]
 max_meter = 100.0
 current_meter = 100.0
 
+[node name="PlayerHealthDisplaySubView" type="SubViewport" parent="HealthTracker"]
+size = Vector2i(128, 32)
+
+[node name="Control" type="Control" parent="HealthTracker/PlayerHealthDisplaySubView"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ProgressBar" type="ProgressBar" parent="HealthTracker/PlayerHealthDisplaySubView/Control"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 32.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="PlayerHealthDisplayMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.74084, 0, -0.671682, 0, 1, 0, 0.671682, 0, -0.74084, 0, 1.45103, 0)
+mesh = SubResource("QuadMesh_3draa")
+skeleton = NodePath("../HealthTracker/PlayerHealthDisplaySubView")
+
 [connection signal="body_entered" from="AIBehaviorNode/DetectionArea" to="AIBehaviorNode/EnemyIdleState" method="on_body_entered_detection"]
+[connection signal="meter_changed" from="HealthTracker" to="HealthTracker/PlayerHealthDisplaySubView/Control/ProgressBar" method="set_value"]

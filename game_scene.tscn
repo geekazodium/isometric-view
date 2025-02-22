@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cbv1dxyigx1xv"]
+[gd_scene load_steps=15 format=3 uid="uid://cbv1dxyigx1xv"]
 
 [ext_resource type="PackedScene" uid="uid://cfo0gbssufe3m" path="res://entities/player/player_character_body_3d.tscn" id="1_7f8rh"]
 [ext_resource type="PackedScene" uid="uid://f6q8kbwx588i" path="res://ui/gameplay_ui.tscn" id="1_codw0"]
@@ -42,6 +42,10 @@ emission_energy_multiplier = 1.4
 [sub_resource type="BoxMesh" id="BoxMesh_unxch"]
 material = SubResource("StandardMaterial3D_sk865")
 size = Vector3(1024, 1, 1024)
+
+[sub_resource type="SphereMesh" id="SphereMesh_7kakh"]
+radius = 0.3
+height = 0.6
 
 [node name="Root" type="Node3D"]
 
@@ -107,5 +111,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.65344, 0, 11.4054)
 
 [node name="OtherPoint" type="Node3D" parent="RandomSpawner"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 9)
+
+[node name="PlanarProjectAim" type="PlanarProjectAim" parent="."]
+plane_norm = Vector3(0, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlanarProjectAim"]
+mesh = SubResource("SphereMesh_7kakh")
 
 [connection signal="body_entered" from="NavigationRegion3D/Area3D" to="NavigationRegion3D/Area3D/LoadScene" method="load_next_scene"]

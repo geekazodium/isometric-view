@@ -21,20 +21,16 @@ pub struct TickingStatTracker{
 
 #[godot_api]
 impl INode for TickingStatTracker{
+    fn ready(&mut self){
+        self.emit_update_signal();
+    }
     fn physics_process(&mut self, delta: f64){
         self.current_meter += delta * self.increase_per_second;
         self.clamp_stat();
-        let curr = self.current_meter.to_variant();
         if delta * self.increase_per_second == 0.{
             return;
         }
-        if !self.update_event_name.is_empty(){
-            // order of operations should be from local change then handle global event
-            self.base_mut().emit_signal("meter_changed", &[curr.clone()]);
-            EventBus::singleton().emit_signal(self.update_event_name.arg(), &[curr]);
-        }else{
-            self.base_mut().emit_signal("meter_changed", &[curr]);
-        }
+        self.emit_update_signal();
     }
 }
 
@@ -49,5 +45,18 @@ impl TickingStatTracker{
     }
     fn clamp_stat(&mut self){
         self.current_meter = self.current_meter.clamp(0., self.max_meter);
+    }
+}
+
+impl TickingStatTracker{
+    fn emit_update_signal(&mut self){
+        let curr = self.current_meter.to_variant();
+        if !self.update_event_name.is_empty(){
+            // order of operations should be from local change then handle global event
+            self.base_mut().emit_signal("meter_changed", &[curr.clone()]);
+            EventBus::singleton().emit_signal(self.update_event_name.arg(), &[curr]);
+        }else{
+            self.base_mut().emit_signal("meter_changed", &[curr]);
+        }
     }
 }
