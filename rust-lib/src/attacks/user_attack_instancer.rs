@@ -28,7 +28,7 @@ pub struct UserAttackInstancer{
 #[godot_api]
 impl INode3D for UserAttackInstancer{
     fn process(&mut self, _delta: f64){
-        if Input::singleton().is_action_just_pressed(self.attack_action.arg()){
+        if Input::singleton().is_action_pressed(self.attack_action.arg()){
             self.attack_use_buffer_timer = self.attack_use_buffer;
         }
     }

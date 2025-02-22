@@ -7,7 +7,7 @@
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_c12hv"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_gx1qe"]
-radius = 12.748
+radius = 28.4633
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_ifp22"]
 viewport_path = NodePath("HealthTracker/PlayerHealthDisplaySubView")
@@ -57,7 +57,7 @@ character_body = NodePath("../..")
 in_distance_state = "Attack"
 target_tracker = NodePath("../EnemyTargetTracker")
 navigation_agent = NodePath("../../NavigationAgent3D")
-follow_speed = 10.0
+follow_speed = 80.0
 grounded_movement = NodePath("../GroundedMovement")
 
 [node name="EnemyAttackState" type="EnemyAttackState" parent="AIBehaviorNode" node_paths=PackedStringArray("target_tracker", "character_body")]

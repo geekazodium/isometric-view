@@ -50,8 +50,8 @@ update_event_name = "player_sanity_changed"
 
 [node name="UserAttackInstancer" type="UserAttackInstancer" parent="." node_paths=PackedStringArray("aim_pointer")]
 attack_action = "use_attack"
-cooldown = 1.0
-attack_use_buffer = 1.0
+cooldown = 0.3
+attack_use_buffer = 0.2
 attack = ExtResource("1_rfweq")
 attack_rotate_from = Vector3(1, 0, 0)
 aim_pointer = NodePath("../PlanarProjectAim")
