@@ -87,9 +87,6 @@ shape = SubResource("BoxShape3D_giv3c")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/Area3D"]
 mesh = SubResource("BoxMesh_unxch")
 
-[node name="LoadScene" type="LoadScene" parent="NavigationRegion3D/Area3D"]
-next = "res://game_scene.tscn"
-
 [node name="CharacterBody3D" parent="." instance=ExtResource("1_7f8rh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.3198, 0.272177, -18.1249)
 
@@ -105,5 +102,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.65344, 0, 11.4054)
 
 [node name="OtherPoint" type="Node3D" parent="RandomSpawner"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 9)
-
-[connection signal="body_entered" from="NavigationRegion3D/Area3D" to="NavigationRegion3D/Area3D/LoadScene" method="load_next_scene"]

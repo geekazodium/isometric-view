@@ -57,7 +57,7 @@ character_body = NodePath("../..")
 in_distance_state = "Attack"
 target_tracker = NodePath("../EnemyTargetTracker")
 navigation_agent = NodePath("../../NavigationAgent3D")
-follow_speed = 80.0
+follow_speed = 100.0
 grounded_movement = NodePath("../GroundedMovement")
 
 [node name="EnemyAttackState" type="EnemyAttackState" parent="AIBehaviorNode" node_paths=PackedStringArray("target_tracker", "character_body")]
@@ -104,8 +104,8 @@ transform = Transform3D(-0.74084, 0, -0.671682, 0, 1, 0, 0.671682, 0, -0.74084, 
 mesh = SubResource("QuadMesh_3draa")
 skeleton = NodePath("../HealthTracker/PlayerHealthDisplaySubView")
 
-[node name="EnemyDeleteOnDeath" type="EnemyDeleteOnDeath" parent="."]
+[node name="EntityDeleteOnDeath" type="EntityDeleteOnDeath" parent="."]
 
 [connection signal="body_entered" from="AIBehaviorNode/DetectionArea" to="AIBehaviorNode/EnemyIdleState" method="on_body_entered_detection"]
 [connection signal="meter_changed" from="HealthTracker" to="HealthTracker/PlayerHealthDisplaySubView/Control/ProgressBar" method="set_value"]
-[connection signal="meter_changed" from="HealthTracker" to="EnemyDeleteOnDeath" method="on_health_change"]
+[connection signal="meter_changed" from="HealthTracker" to="EntityDeleteOnDeath" method="on_health_change"]

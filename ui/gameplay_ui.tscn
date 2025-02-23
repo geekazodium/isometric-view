@@ -31,3 +31,14 @@ offset_right = 202.0
 offset_bottom = 23.0
 text = "Sanity
 "
+
+[node name="Button" type="Button" parent="."]
+visible = false
+offset_left = 507.0
+offset_top = 253.0
+offset_right = 794.0
+offset_bottom = 376.0
+text = "Game over! try again?"
+
+[node name="PlayerLoseHandler" type="PlayerLoseHandler" parent="." node_paths=PackedStringArray("game_over_scene")]
+game_over_scene = NodePath("../Button")
