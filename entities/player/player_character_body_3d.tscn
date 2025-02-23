@@ -66,6 +66,6 @@ mesh = SubResource("SphereMesh_6dtt5")
 gravity = -15.0
 ground_friction = 9.0
 
-[node name="PlayerDisableOnDeath" type="PlayerDisableOnDeath" parent="."]
+[node name="EntityDeleteOnDeath" type="EntityDeleteOnDeath" parent="."]
 
-[connection signal="meter_changed" from="HealthTracker" to="PlayerDisableOnDeath" method="on_health_change"]
+[connection signal="meter_changed" from="HealthTracker" to="EntityDeleteOnDeath" method="on_health_change"]

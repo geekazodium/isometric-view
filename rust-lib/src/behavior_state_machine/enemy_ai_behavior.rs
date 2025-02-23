@@ -9,6 +9,7 @@ use godot::classes::INode;
 use godot::classes::Node;
 use godot::classes::Node3D;
 use godot::classes::PackedScene;
+use godot::global::godot_print;
 use godot::meta::FromGodot;
 use godot::meta::ToGodot;
 use godot::obj::Base;
@@ -84,8 +85,8 @@ pub struct EnemyTargetingState{
     distance_tolerance: f32,
     #[export]
     character_body: Option<Gd<CharacterBody3D>>,
-    #[export]
-    in_distance_state: GString,
+    #[export] in_distance_state: GString,
+    #[export] target_lost_state: GString,
     #[export]
     target_tracker: Option<Gd<EnemyTargetTracker>>,
     #[export]
@@ -101,7 +102,13 @@ impl INode for EnemyTargetingState{
         
     }
     fn physics_process(&mut self, delta: f64){
-        let target_pos = self.get_target().get_global_position();
+        let target = self.get_target();
+        let target_pos = if let Some(t) = target{
+            t.get_global_position()
+        }else{
+            set_state!(self, self.target_lost_state);
+            return;
+        };
         self.set_nav_target_pos(target_pos);
         let character_body = self.get_character_body_expect();
         let dir = self.get_nav_agent_next_pos() - character_body.get_global_position();
@@ -116,11 +123,10 @@ impl EnemyTargetingState {
     fn get_character_body_expect(&self) -> Gd<CharacterBody3D>{
         self.get_character_body().expect(panic_message!(self,"character body not set!"))
     }
-    fn get_target(&self) -> Gd<Node3D>{
+    fn get_target(&self) -> Option<Gd<Node3D>>{
         self.target_tracker.as_ref()
             .expect(panic_message!(self,"no target tracker")).bind()
             .get_target_node()
-            .expect(panic_message!(self,"oh whops"))
     }
     fn set_nav_target_pos(&self, pos: Vector3){
         self.get_navigation_agent().expect("no nav agent set")
@@ -204,6 +210,7 @@ impl EnemyTargetTracker{
     #[func]
     fn on_target_invalid(&mut self){
         self.target_node = None;
+        godot_print!("attempted to free ref");
     }
 }
 

@@ -55,6 +55,7 @@ grounded_movement = NodePath("../GroundedMovement")
 distance_tolerance = 10.0
 character_body = NodePath("../..")
 in_distance_state = "Attack"
+target_lost_state = "Idle"
 target_tracker = NodePath("../EnemyTargetTracker")
 navigation_agent = NodePath("../../NavigationAgent3D")
 follow_speed = 100.0
