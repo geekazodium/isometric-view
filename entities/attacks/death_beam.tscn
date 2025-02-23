@@ -1,10 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://cf3kdmjama6v1"]
+[gd_scene load_steps=3 format=3 uid="uid://cf3kdmjama6v1"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3c5t5"]
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 10.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_gn1yx"]
+material = SubResource("StandardMaterial3D_3c5t5")
 size = Vector3(100, 0.05, 0.05)
 
 [node name="DeathBeam" type="AttackRaycast"]
-knockback_multiplier = -10.0
+knockback_multiplier = 10.0
 knockback_up_multiplier = 3.0
 attack_damage = 10.0
 target_position = Vector3(-128, 0, 0)

@@ -45,7 +45,7 @@ update_event_name = "player_health_changed"
 [node name="SanityTracker" type="TickingStatTracker" parent="."]
 max_meter = 100.0
 current_meter = 100.0
-increase_per_second = -2.0
+increase_per_second = 1.0
 update_event_name = "player_sanity_changed"
 
 [node name="UserAttackInstancer" type="UserAttackInstancer" parent="." node_paths=PackedStringArray("aim_pointer")]

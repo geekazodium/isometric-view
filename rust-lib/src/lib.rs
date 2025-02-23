@@ -58,3 +58,4 @@ pub mod third_person_character_body;
 pub mod game_meters;
 pub mod behavior_state_machine;
 pub mod attacks;
+pub mod gamestate;
