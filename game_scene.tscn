@@ -18,10 +18,8 @@ sky_material = SubResource("ProceduralSkyMaterial_qer7y")
 background_mode = 2
 sky = SubResource("Sky_q4hax")
 tonemap_mode = 2
-ssao_enabled = true
 ssao_light_affect = 1.0
 ssao_ao_channel_affect = 1.0
-ssil_enabled = true
 ssil_radius = 10.0
 glow_enabled = true
 
@@ -78,7 +76,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.791, -9.04441, -17.034)
 [node name="FloorBody5" parent="NavigationRegion3D" instance=ExtResource("4_d3cda")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.966, -9.04441, -21.924)
 
-[node name="Area3D" type="Area3D" parent="NavigationRegion3D"]
+[node name="Area3D" type="AttackHitbox" parent="NavigationRegion3D"]
+attack_damage = 100.0
+persistent = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -17.8324, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Area3D"]

@@ -40,5 +40,10 @@ offset_right = 794.0
 offset_bottom = 376.0
 text = "Game over! try again?"
 
+[node name="LoadScene" type="LoadScene" parent="Button"]
+next = "res://game_scene.tscn"
+
 [node name="PlayerLoseHandler" type="PlayerLoseHandler" parent="." node_paths=PackedStringArray("game_over_scene")]
 game_over_scene = NodePath("../Button")
+
+[connection signal="button_up" from="Button" to="Button/LoadScene" method="load_next_scene"]

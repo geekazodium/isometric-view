@@ -9,6 +9,8 @@ use godot::classes::Node;
 
 use crate::event_bus::EventBus;
 
+pub const HEALTH_TRACKER_NAME: &str = "HealthTracker";
+
 #[derive(GodotClass)]
 #[class(base = Node, init)]
 pub struct TickingStatTracker{

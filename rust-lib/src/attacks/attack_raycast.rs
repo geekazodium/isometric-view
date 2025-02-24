@@ -10,8 +10,7 @@ use godot::prelude::GodotClass;
 use godot::prelude::Vector3;
 
 use crate::game_meters::ticking_stat_tracker::TickingStatTracker;
-
-const HEALTH_TRACKER_NAME: &str = "HealthTracker";
+use crate::game_meters::ticking_stat_tracker::HEALTH_TRACKER_NAME;
 
 #[derive(GodotClass)]
 #[class(base = RayCast3D, init)]
