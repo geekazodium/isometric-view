@@ -15,7 +15,8 @@ pub struct SanityHandler{
     #[export] sanity: Option<Gd<TickingStatTracker>>,
     #[export] sanity_per_damage_taken: f64,
     #[export] sanity_per_damage_dealt: f64,
-    #[export] sanity_per_kill: f64
+    #[export] sanity_per_kill: f64,
+    #[export] damage_bonus_per_lost_sanity: f64
 }
 
 #[godot_api]
@@ -37,6 +38,13 @@ impl SanityHandler{
     #[func]
     fn on_kill(&mut self){
         self.add_to_sanity(self.sanity_per_kill);
+    }
+    #[func]
+    pub fn get_bonus_damage(&self) -> f64{
+        let sanity = self.sanity.as_ref()
+            .expect("no sanity meter is set")
+            .bind();
+        (sanity.get_max_meter() - sanity.get_current_meter()) * self.damage_bonus_per_lost_sanity
     }
 }
 

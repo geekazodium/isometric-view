@@ -1,6 +1,7 @@
 use godot::builtin::Callable;
 use godot::builtin::GString;
 use godot::builtin::Quaternion;
+use godot::builtin::VariantOperator;
 use godot::builtin::Vector3;
 use godot::classes::INode3D;
 use godot::classes::Input;
@@ -13,6 +14,8 @@ use godot::obj::WithBaseField;
 use godot::prelude::godot_api;
 use godot::prelude::GodotClass;
 
+use crate::game_meters::sanity_meter::SanityHandler;
+
 #[derive(GodotClass)]
 #[class(base = Node3D, init)]
 pub struct UserAttackInstancer{
@@ -24,7 +27,14 @@ pub struct UserAttackInstancer{
     #[export] attack_use_buffer: f64,
     #[export] attack: Option<Gd<PackedScene>>,
     #[export] attack_rotate_from: Vector3,
+    
+    #[export] sanity_handler: Option<Gd<SanityHandler>>,
+
+    //aim
     #[export] aim_pointer: Option<Gd<Node3D>>,
+
+    //damage event forwarding
+    //bad, do not bubble event, swap this to the global event system later :3
     attack_dealt_damage_callable: Option<Callable>,
     #[export] damage_signal: GString
 }
@@ -68,6 +78,14 @@ impl UserAttackInstancer{
         }else{
             aim_dir.normalized()
         }));
+
+        if let Some(sanity_handler) = self.sanity_handler.as_ref(){
+            let attack_dmg_name = "attack_damage";
+            let damage = attack.get(attack_dmg_name).evaluate(&sanity_handler.bind().get_bonus_damage().to_variant(), VariantOperator::ADD);
+            attack.set(attack_dmg_name,damage.as_ref().unwrap());
+        }
+
+        //listen for attack dealing damage
         attack.connect(&self.damage_signal.to_string(), self.attack_dealt_damage_callable.as_ref().unwrap());
     }
 }

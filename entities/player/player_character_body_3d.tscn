@@ -46,6 +46,7 @@ update_event_name = "player_health_changed"
 sanity = NodePath("../SanityTracker")
 sanity_per_damage_taken = -0.35
 sanity_per_damage_dealt = -0.35
+damage_bonus_per_lost_sanity = 0.5
 
 [node name="SanityTracker" type="TickingStatTracker" parent="."]
 max_meter = 100.0
@@ -53,12 +54,13 @@ current_meter = 100.0
 increase_per_second = 1.0
 update_event_name = "player_sanity_changed"
 
-[node name="UserAttackInstancer" type="UserAttackInstancer" parent="." node_paths=PackedStringArray("aim_pointer")]
+[node name="UserAttackInstancer" type="UserAttackInstancer" parent="." node_paths=PackedStringArray("sanity_handler", "aim_pointer")]
 attack_action = "use_attack"
 cooldown = 0.3
 attack_use_buffer = 0.2
 attack = ExtResource("1_rfweq")
 attack_rotate_from = Vector3(1, 0, 0)
+sanity_handler = NodePath("../SanityHandler")
 aim_pointer = NodePath("../PlanarProjectAim")
 damage_signal = "dealt_damage"
 
