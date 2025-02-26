@@ -40,11 +40,14 @@ impl INode for TickingStatTracker{
 impl TickingStatTracker{
     #[signal]
     fn meter_changed(current: f64);
+    #[signal]
+    fn meter_add(amount: f64);
     #[func]
     pub fn add_to_stat(&mut self, amount: f64){
         self.current_meter += amount;
         self.clamp_stat();
         self.emit_update_signal();
+        self.base_mut().emit_signal("meter_add", &[amount.to_variant()]);
     }
     fn clamp_stat(&mut self){
         self.current_meter = self.current_meter.clamp(0., self.max_meter);

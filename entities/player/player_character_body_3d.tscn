@@ -42,6 +42,11 @@ current_meter = 100.0
 increase_per_second = 0.1
 update_event_name = "player_health_changed"
 
+[node name="SanityHandler" type="SanityHandler" parent="." node_paths=PackedStringArray("sanity")]
+sanity = NodePath("../SanityTracker")
+sanity_per_damage_taken = -0.35
+sanity_per_damage_dealt = -0.35
+
 [node name="SanityTracker" type="TickingStatTracker" parent="."]
 max_meter = 100.0
 current_meter = 100.0
@@ -55,6 +60,7 @@ attack_use_buffer = 0.2
 attack = ExtResource("1_rfweq")
 attack_rotate_from = Vector3(1, 0, 0)
 aim_pointer = NodePath("../PlanarProjectAim")
+damage_signal = "dealt_damage"
 
 [node name="PlanarProjectAim" type="PlanarProjectAim" parent="."]
 plane_norm = Vector3(0, 1, 0)
@@ -68,4 +74,6 @@ ground_friction = 9.0
 
 [node name="EntityDeleteOnDeath" type="EntityDeleteOnDeath" parent="."]
 
+[connection signal="meter_add" from="HealthTracker" to="SanityHandler" method="on_health_modified"]
 [connection signal="meter_changed" from="HealthTracker" to="EntityDeleteOnDeath" method="on_health_change"]
+[connection signal="instanced_attack_dealt_damage" from="UserAttackInstancer" to="SanityHandler" method="on_deal_damage"]

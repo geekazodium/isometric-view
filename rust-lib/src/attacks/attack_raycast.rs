@@ -2,6 +2,7 @@ use godot::classes::CharacterBody3D;
 use godot::classes::IRayCast3D;
 use godot::classes::MeshInstance3D;
 use godot::classes::RayCast3D;
+use godot::meta::ToGodot;
 use godot::obj::Base;
 use godot::obj::Gd;
 use godot::obj::WithBaseField;
@@ -39,9 +40,17 @@ impl IRayCast3D for AttackRaycast{
             self.hit = true;
             if let Some(mut health) = other.find_child(HEALTH_TRACKER_NAME).map(|v|v.cast::<TickingStatTracker>()){
                 health.bind_mut().add_to_stat(-self.attack_damage);
+                let damage_variant = self.attack_damage.to_variant();
+                self.base_mut().emit_signal("dealt_damage", &[damage_variant]);
             }
         }
     }
+}
+
+#[godot_api]
+impl AttackRaycast{
+    #[signal]
+    fn dealt_damage(damage: f64);
 }
 
 impl AttackRaycast{
