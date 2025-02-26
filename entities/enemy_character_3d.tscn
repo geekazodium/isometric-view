@@ -52,13 +52,13 @@ character_body = NodePath("../..")
 grounded_movement = NodePath("../GroundedMovement")
 
 [node name="EnemyTargetingState" type="EnemyTargetingState" parent="AIBehaviorNode" node_paths=PackedStringArray("character_body", "target_tracker", "navigation_agent", "grounded_movement")]
-distance_tolerance = 10.0
+distance_tolerance = 7.0
 character_body = NodePath("../..")
 in_distance_state = "Attack"
 target_lost_state = "Idle"
 target_tracker = NodePath("../EnemyTargetTracker")
 navigation_agent = NodePath("../../NavigationAgent3D")
-follow_speed = 100.0
+follow_speed = 90.0
 grounded_movement = NodePath("../GroundedMovement")
 
 [node name="EnemyAttackState" type="EnemyAttackState" parent="AIBehaviorNode" node_paths=PackedStringArray("target_tracker", "character_body")]

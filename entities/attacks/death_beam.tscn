@@ -11,7 +11,7 @@ size = Vector3(128, 0.05, 0.05)
 
 [node name="DeathBeam" type="AttackRaycast" node_paths=PackedStringArray("display_mesh")]
 knockback_multiplier = 10.0
-knockback_up_multiplier = 3.0
+knockback_up_multiplier = 2.5
 attack_damage = 10.0
 display_mesh = NodePath("MeshInstance3D")
 display_mesh_center = Vector3(-64, 0, 0)

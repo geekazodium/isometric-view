@@ -44,14 +44,14 @@ update_event_name = "player_health_changed"
 
 [node name="SanityHandler" type="SanityHandler" parent="." node_paths=PackedStringArray("sanity")]
 sanity = NodePath("../SanityTracker")
-sanity_per_damage_taken = -0.35
-sanity_per_damage_dealt = -0.35
+sanity_per_damage_taken = -0.25
+sanity_per_damage_dealt = -0.8
 damage_bonus_per_lost_sanity = 0.5
 
 [node name="SanityTracker" type="TickingStatTracker" parent="."]
 max_meter = 100.0
 current_meter = 100.0
-increase_per_second = 1.0
+increase_per_second = 20.0
 update_event_name = "player_sanity_changed"
 
 [node name="UserAttackInstancer" type="UserAttackInstancer" parent="." node_paths=PackedStringArray("sanity_handler", "aim_pointer")]
@@ -78,4 +78,5 @@ ground_friction = 9.0
 
 [connection signal="meter_add" from="HealthTracker" to="SanityHandler" method="on_health_modified"]
 [connection signal="meter_changed" from="HealthTracker" to="EntityDeleteOnDeath" method="on_health_change"]
+[connection signal="meter_changed" from="SanityTracker" to="EntityDeleteOnDeath" method="on_health_change"]
 [connection signal="instanced_attack_dealt_damage" from="UserAttackInstancer" to="SanityHandler" method="on_deal_damage"]

@@ -4,30 +4,30 @@
 
 [node name="HealthProgressBar" type="StatDisplay" parent="."]
 stat_update_signal = "player_health_changed"
-offset_left = 5.0
+offset_left = 101.0
 offset_top = 5.0
-offset_right = 155.0
+offset_right = 1173.0
 offset_bottom = 32.0
 step = 1.0
 
 [node name="Label" type="Label" parent="HealthProgressBar"]
 layout_mode = 0
-offset_left = 154.0
-offset_right = 210.0
+offset_left = -95.0
+offset_right = -39.0
 offset_bottom = 23.0
 text = "Health"
 
 [node name="SanityProgressBar" type="StatDisplay" parent="."]
 stat_update_signal = "player_sanity_changed"
-offset_left = 5.0
+offset_left = 100.0
 offset_top = 36.0
-offset_right = 155.0
+offset_right = 1131.0
 offset_bottom = 63.0
 
 [node name="Label" type="Label" parent="SanityProgressBar"]
 layout_mode = 0
-offset_left = 154.0
-offset_right = 202.0
+offset_left = -95.0
+offset_right = -47.0
 offset_bottom = 23.0
 text = "Sanity
 "

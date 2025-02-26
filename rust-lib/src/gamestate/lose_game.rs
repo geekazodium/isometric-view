@@ -21,6 +21,7 @@ struct PlayerLoseHandler{
 impl INode for PlayerLoseHandler {
     fn ready(&mut self){
         EventBus::singleton().connect("player_health_changed", &Callable::from_object_method(&self.to_gd(), "on_player_health_change"));
+        EventBus::singleton().connect("player_sanity_changed", &Callable::from_object_method(&self.to_gd(), "on_player_health_change"));
     }
 }
 
